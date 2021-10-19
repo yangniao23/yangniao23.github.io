@@ -1,0 +1,21 @@
+// See https://containers.dev/implementors/json_reference/ for configuration reference
+{
+	"name": "astro",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"remoteUser": "node",
+	"forwardPorts": [4321, 9229],
+	"postCreateCommand": "cd app && yarn install",
+	"postStartCommand": "cd app && yarn dev --host 0.0.0.0",
+	"features": {
+		"ghcr.io/devcontainers/features/common-utils:2": {},
+		"ghcr.io/devcontainers/features/git:1": {}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": ["astro-build.astro-vscode"]
+		}
+	}
+
+}

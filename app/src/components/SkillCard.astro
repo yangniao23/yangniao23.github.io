@@ -1,0 +1,19 @@
+---
+import ExpandableCard from "./ExpandableCard.astro";
+import Card from "./Card.astro";
+
+export interface Props {
+    icon: string;
+    title: string;
+    description: string;
+}
+
+const { icon, title, description } = Astro.props;
+---
+
+<ExpandableCard>
+    <div slot="trigger" class="w-full">
+        <Card icon={icon} title={title} description={description} />
+    </div>
+    <slot />
+</ExpandableCard>

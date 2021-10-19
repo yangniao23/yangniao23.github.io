@@ -1,0 +1,387 @@
+---
+import { getCollection } from "astro:content";
+import Header from "../components/Header.astro";
+import Layout from "../layouts/Layout.astro";
+import Card from "../components/Card.astro";
+import ThemeToggle from "../components/ThemeToggle.astro";
+import Section from "../components/Section.astro";
+import ProfileItem from "../components/ProfileItem.astro";
+import CardGrid from "../components/CardGrid.astro";
+import ExperienceCard from "../components/ExperienceCard.astro";
+import SkillCard from "../components/SkillCard.astro";
+import DiscordCopyButton from "../components/DiscordCopyButton.astro";
+import BlogPostCard from "../components/BlogPostCard.astro";
+import DiscordCard from "../components/DiscordCard.astro";
+import TwitterCard from "../components/TwitterCard.astro";
+
+const latestPosts = (await getCollection("blog"))
+	.filter((p) => !p.data.draft)
+	.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+	.slice(0, 3);
+---
+
+<Layout>
+	<Header />
+	<ThemeToggle />
+
+	<main>
+		<!-- ヒーローセクション -->
+		<section
+			class="bg-gradient-to-br from-primary-500 to-secondary-600 text-white py-16 px-4"
+		>
+			<div class="max-w-6xl mx-auto text-center">
+				<h1 class="text-4xl md:text-6xl font-bold mb-6">
+					ヤンのページ
+				</h1>
+			</div>
+		</section>
+
+		<!-- 自己紹介セクション -->
+		<Section
+			title="About Me"
+			backgroundClass="bg-gray-100 dark:bg-gray-800 py-16 px-4"
+			id="about"
+		>
+			<div class="grid md:grid-cols-3 gap-12 items-center">
+				<div class="flex justify-center">
+					<!-- public/icon.png を表示 -->
+					<img
+						src="/icon.png"
+						alt="Profile Icon"
+						class="w-48 h-48 rounded-full shadow-lg"
+					/>
+				</div>
+				<div class="md:col-span-2 space-y-6">
+					<div class="space-y-4">
+						<ProfileItem label="名前">
+							湯嶋 皓騎 (YUSHIMA Kouki)
+						</ProfileItem>
+						<ProfileItem label="年齢"> 21歳 </ProfileItem>
+						<ProfileItem label="所属">
+							<p>長岡工業高等専門学校 電子制御工学科 卒業</p>
+							<p>↓</p>
+							<p>
+								新潟大学 工学部工学科 知能情報システムプログラム
+								B3
+							</p>
+						</ProfileItem>
+					</div>
+				</div>
+			</div>
+		</Section>
+
+		<!-- SNSセクション -->
+		<Section
+			title="Follow Me"
+			backgroundClass="py-16 px-4 bg-white dark:bg-gray-900"
+		>
+			<CardGrid columns={4}>
+				<TwitterCard />
+				<Card
+					icon="🐱"
+					title="GitHub"
+					description="@yangniao23"
+					href="/sns/github"
+					target="_blank"
+				/>
+				<Card
+					icon="📝"
+					title="Qiita"
+					description="@yangniao23"
+					href="/sns/qiita"
+					target="_blank"
+				/>
+				<DiscordCard username="yangniao23" />
+			</CardGrid>
+		</Section>
+
+		<!-- スキルセクション -->
+		<Section
+			title="Skills & Technologies"
+			backgroundClass="py-16 px-4 bg-gray-100 dark:bg-gray-800"
+			id="skills"
+		>
+			<CardGrid columns={4} gap={6}>
+				<SkillCard
+					icon="🤖"
+					title="AI / Machine Learning"
+					description="Python · PyTorch · LLM"
+				>
+					<h4 class="text-base font-semibold mb-2">
+						AI / Machine Learning
+					</h4>
+					<ul class="list-disc pl-5 space-y-1 text-sm">
+						<li>Python（メイン言語）</li>
+						<li>PyTorch での CNN 実装・学習</li>
+						<li>動画超解像モデル設計（卒業研究）</li>
+						<li>LLM 連携（OpenAI API 等）</li>
+						<li>OpenSearch ベクタ検索・インデックス設計</li>
+					</ul>
+				</SkillCard>
+				<SkillCard
+					icon="🌐"
+					title="Web / Application"
+					description="Flask · Flutter · GAS"
+				>
+					<h4 class="text-base font-semibold mb-2">
+						Web / Application
+					</h4>
+					<ul class="list-disc pl-5 space-y-1 text-sm">
+						<li>Flask で RESTful API 構築</li>
+						<li>Flutter / Dart でのクロスプラットフォーム開発</li>
+						<li>SlackBot 実装（Python）</li>
+						<li>Google Apps Script（GAS）による業務自動化</li>
+						<li>Google Sheets QUERY 関数・ダッシュボード構築</li>
+					</ul>
+				</SkillCard>
+				<SkillCard
+					icon="⚙️"
+					title="Systems / Network"
+					description="C · TCP/IP · Linux · AWS"
+				>
+					<h4 class="text-base font-semibold mb-2">
+						Systems / Network
+					</h4>
+					<ul class="list-disc pl-5 space-y-1 text-sm">
+						<li>C 言語（TCP/IP スタック自作）</li>
+						<li>TCP/IP：ARP・IP・ICMP・UDP・TCP 実装</li>
+						<li>Linux / Arch Linux 日常運用・systemd</li>
+						<li>VPN 構築・運用</li>
+						<li>AWS（Lambda・OpenSearch Service 等）</li>
+					</ul>
+				</SkillCard>
+				<SkillCard
+					icon="🏗️"
+					title="Software Design"
+					description="Pydantic · レイヤードアーキテクチャ"
+				>
+					<h4 class="text-base font-semibold mb-2">
+						Software Design
+					</h4>
+					<ul class="list-disc pl-5 space-y-1 text-sm">
+						<li>Pydantic によるデータモデル設計</li>
+						<li>
+							レイヤードアーキテクチャ（インフラ／ドメイン分離）
+						</li>
+						<li>Strategy パターン適用</li>
+						<li>回帰分析・統計的推定の実装経験</li>
+					</ul>
+				</SkillCard>
+			</CardGrid>
+		</Section>
+
+		<!-- プロジェクトセクション -->
+		<Section
+			title="Projects"
+			backgroundClass="py-16 px-4 bg-white dark:bg-gray-900"
+			id="projects"
+		>
+			<div class="max-w-3xl mx-auto flex flex-col gap-4">
+				<ExperienceCard
+					title="バックエンド設計改善（レイヤードアーキテクチャ移行）"
+					badge="アルバイト"
+					summary="Jupyter Notebook と密結合していた実装を 3層アーキテクチャへ移行し，汎用性と保守性を大幅に向上"
+					tags={["Python", "Pydantic", "レイヤードアーキテクチャ"]}
+				>
+					<p class="text-sm leading-relaxed">
+						Jupyter Notebook
+						の物理構造に依存していた既存の実装を，Pydantic
+						を用いたレイヤードアーキテクチャへ移行．インフラ層とドメイン層を分離したことで，データソースの変更に強い設計を実現した．
+					</p>
+				</ExperienceCard>
+
+				<ExperienceCard
+					title="業務管理基盤の構築（スプレッドシート・GAS）"
+					badge="アルバイト"
+					summary="QUERY 関数によるリアルタイム進捗ダッシュボードと，GAS を用いた Google Drive ファイルの自動紐付けによって業務フローを整備"
+					tags={["Google Apps Script", "Google Sheets", "業務自動化"]}
+				>
+					<p class="text-sm leading-relaxed">
+						複数のシートに跨る非定型データを QUERY
+						関数等で正規化し，リアルタイムの進捗ダッシュボードを構築．さらに
+						GAS を用いて Google Drive
+						内の物理ファイルと管理表のメタデータを自動紐付けする機能を実装した．これにより，従来発生していたファイル管理の混乱を大幅に削減し，業務効率を向上に成功した．
+					</p>
+				</ExperienceCard>
+			</div>
+		</Section>
+
+		<!-- 経歴セクション -->
+		<Section
+			title="Career"
+			backgroundClass="py-16 px-4 bg-gray-100 dark:bg-gray-800"
+			id="career"
+		>
+			<div class="max-w-3xl mx-auto flex flex-col gap-4">
+				<ExperienceCard
+					title="AI エージェント開発インターンシップ"
+					badge="インターン"
+					badgeColor="blue"
+					period="2025年9月（10日間）"
+					summary="PKSHA Technology にて，Slack 上の Q&A を FAQ 化する AI エージェントをチームで開発．SlackBot 実装・を主に担当"
+					tags={["Python", "SlackBot", "OpenSearch", "LLM", "AWS"]}
+				>
+					<p class="text-sm leading-relaxed">
+						FAQシステムを活用した AI
+						エージェントを開発するインターンシップに参加．
+						FAQシステムが上手く活用されず，Slack上で直接コミュニケーションが行われるために知識の蓄積がされないことを課題と捉え，Slackで質問が投稿された際に
+						質問内容を OpenSearch のベクタ検索で既存 FAQ
+						との類似度を判定．未知の問いと判断した場合は議論終了後にLLMでスレッドを要約して
+						FAQ 下書きを自動生成する AI
+						エージェントをチームで開発．主に SlackBot
+						の実装を担当し，AWS Lambda 上で動作させた．
+					</p>
+				</ExperienceCard>
+
+				<ExperienceCard
+					title="卒業研究：圧縮動画超解像モデルの検討・実装"
+					badge="卒業研究"
+					badgeColor="secondary"
+					period="高専5年時"
+					summary="CNN を用いたエッジデバイス指向の軽量な圧縮動画超解像モデルの提案 動きベクトルの活用の模索"
+					tags={[
+						"Python",
+						"PyTorch",
+						"CNN",
+						"動画超解像",
+						"動きベクトル",
+					]}
+				>
+					<p class="text-sm leading-relaxed">
+						圧縮動画のフレームメタデータに含まれる動きベクトルを超解像モデルの特徴量として入力し，ベースモデルと比較して圧縮アーティファクトの低減がなされたことを確認した．
+					</p>
+				</ExperienceCard>
+
+				<ExperienceCard
+					title="TCP/IP プロトコルスタック自作インターンシップ"
+					badge="インターン"
+					badgeColor="blue"
+					period="2023年8月（5日間）"
+					summary="KLab株式会社 にて，C言語でプロトコルスタック開発．5 日間で約 5,000 行を実装"
+					tags={["C言語", "TCP/IP", "Linux", "ネットワーク", "RFC"]}
+				>
+					<p class="text-sm leading-relaxed">
+						Ethernet フレーム受信からアプリケーション層まで，TCP/IP
+						プロトコルスタックを C
+						言語で実装．ARP・IP・ICMP・UDP・TCP（3
+						ウェイハンドシェイク・再送制御）を全て実装し，Linux TAP
+						デバイスで動作確認．RFC
+						を一次資料として参照しながら実装することで，ネットワーク通信の原理を深く理解できた．
+					</p>
+				</ExperienceCard>
+
+				<ExperienceCard
+					title="産学連携：解体費用試算 Web アプリ開発"
+					badge="クラブ活動"
+					badgeColor="emerald"
+					period="2022年8月〜2023年3月"
+					summary="高専アントレプレナークラブにて，建物解体費用を試算する Web アプリを Flutter + Flask で開発"
+					tags={[
+						"Flutter",
+						"Python",
+						"Flask",
+						"RESTful API",
+						"回帰分析",
+					]}
+				>
+					<p class="text-sm leading-relaxed">
+						高専アントレプレナークラブの活動として，産学連携プロジェクトに参加．建物の坪数と構造から解体費用を推定する単回帰モデルを実装し，Flutter
+						Web フロントエンドと Flask RESTful API
+						バックエンドで構成された Web
+						アプリを開発した．クライアントとの要件定義から実装まで一貫して担当し，実際の業務に近い経験を積むことができた．
+					</p>
+				</ExperienceCard>
+			</div>
+		</Section>
+
+		<!-- ブログ最新記事セクション -->
+		<Section
+			title="Latest Posts"
+			backgroundClass="py-16 px-4 bg-gray-100 dark:bg-gray-800"
+			id="blog"
+		>
+			<div class="max-w-3xl mx-auto flex flex-col gap-4">
+				{
+					latestPosts.map((post) => (
+						<BlogPostCard
+							title={post.data.title}
+							abstract={post.data.abstract}
+							date={post.data.date.toLocaleDateString("ja-JP", {
+								year: "numeric",
+								month: "long",
+								day: "numeric",
+							})}
+							href={`/blog/${post.id}`}
+							ogp={post.data.ogp}
+							tags={post.data.tags}
+						/>
+					))
+				}
+				<div class="text-center pt-2">
+					<a
+						href="/blog"
+						class="inline-flex items-center gap-1 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium transition-colors"
+					>
+						ブログ一覧を見る
+						<svg
+							class="w-4 h-4"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+							aria-hidden="true"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M9 5l7 7-7 7"></path>
+						</svg>
+					</a>
+				</div>
+			</div>
+		</Section>
+
+		<!-- お問い合わせセクション -->
+		<Section
+			title="Contact"
+			backgroundClass="py-16 px-4 bg-white dark:bg-gray-900"
+			id="contact"
+		>
+			<div class="max-w-2xl mx-auto text-center space-y-8">
+				<p
+					class="text-gray-600 dark:text-gray-300 text-lg leading-relaxed"
+				>
+					お仕事のご依頼・ご質問などは SNS の DM からお願いします
+				</p>
+				<div class="flex justify-center">
+					<DiscordCopyButton username="yangniao23" />
+				</div>
+				<div class="flex justify-center flex-wrap gap-6 pt-2">
+					<a
+						href="/sns/github"
+						class="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors"
+					>
+						GitHub
+					</a>
+					<a
+						href="/sns/qiita"
+						class="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors"
+					>
+						Qiita
+					</a>
+					<span class="text-gray-400 dark:text-gray-500">
+						<a
+							href="/sns/twitter"
+							class="hover:text-primary-500 transition-colors"
+						>
+							Twitter
+						</a>
+						<span class="text-xs ml-1"
+							>（DM はあまり確認しません）</span
+						>
+					</span>
+				</div>
+			</div>
+		</Section>
+	</main>
+</Layout>

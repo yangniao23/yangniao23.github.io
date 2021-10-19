@@ -1,0 +1,26 @@
+---
+export interface Props {
+    columns?: 2 | 3 | 4;
+    gap?: number;
+}
+
+const { columns = 3, gap = 8 } = Astro.props;
+
+const gridClass = {
+    2: "md:grid-cols-2",
+    3: "md:grid-cols-3",
+    4: "md:grid-cols-4",
+}[columns];
+
+const gapMap: Record<number, string> = {
+    4: "gap-4",
+    6: "gap-6",
+    8: "gap-8",
+    12: "gap-12",
+};
+const gapClass = gapMap[gap] ?? "gap-8";
+---
+
+<div class={`grid ${gridClass} ${gapClass}`}>
+    <slot />
+</div>

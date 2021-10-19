@@ -1,0 +1,39 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import ThemeToggle from "../../components/ThemeToggle.astro";
+import BlogListSection from "../../components/BlogListSection.astro";
+import { getCollection } from "astro:content";
+import { POSTS_PER_PAGE } from "../../consts";
+import type { GetStaticPathsOptions } from "astro";
+
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+    const posts = (await getCollection("blog"))
+        .filter((post) => !post.data.draft)
+        .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+    const allTags = [...new Set(posts.flatMap((p) => p.data.tags ?? []))];
+
+    return paginate(posts, {
+        pageSize: POSTS_PER_PAGE,
+        props: { allTags },
+    });
+}
+
+const { page, allTags } = Astro.props;
+---
+
+<Layout title="ブログ | ヤンのページ">
+    <Header />
+    <ThemeToggle />
+
+    <main>
+        <BlogListSection
+            posts={page.data}
+            allTags={allTags}
+            currentPage={page.currentPage}
+            lastPage={page.lastPage}
+            baseUrl="/blog/"
+        />
+    </main>
+</Layout>

@@ -1,0 +1,72 @@
+---
+export interface Props {
+    currentPage: number;
+    lastPage: number;
+    baseUrl: string;
+}
+
+const { currentPage, lastPage, baseUrl } = Astro.props;
+
+function pageUrl(page: number) {
+    if (page === 1) return baseUrl;
+    return `${baseUrl}${page}/`;
+}
+
+const pages: { num: number; url: string }[] = [];
+for (let i = 1; i <= lastPage; i++) {
+    pages.push({ num: i, url: pageUrl(i) });
+}
+---
+
+{
+    lastPage > 1 && (
+        <nav
+            class="flex justify-center items-center gap-2 mt-12"
+            aria-label="ページナビゲーション"
+        >
+            {/* 前へ */}
+            {currentPage > 1 ? (
+                <a
+                    href={pageUrl(currentPage - 1)}
+                    class="px-3 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-primary-50 dark:hover:bg-gray-700 transition-colors"
+                >
+                    ← 前へ
+                </a>
+            ) : (
+                <span class="px-3 py-2 rounded-lg text-sm font-medium text-gray-400 dark:text-gray-600 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 cursor-not-allowed">
+                    ← 前へ
+                </span>
+            )}
+
+            {/* ページ番号 */}
+            {pages.map(({ num, url }) =>
+                num === currentPage ? (
+                    <span class="px-3 py-2 rounded-lg text-sm font-bold text-white bg-primary-600 border border-primary-600">
+                        {num}
+                    </span>
+                ) : (
+                    <a
+                        href={url}
+                        class="px-3 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-primary-50 dark:hover:bg-gray-700 transition-colors"
+                    >
+                        {num}
+                    </a>
+                ),
+            )}
+
+            {/* 次へ */}
+            {currentPage < lastPage ? (
+                <a
+                    href={pageUrl(currentPage + 1)}
+                    class="px-3 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-primary-50 dark:hover:bg-gray-700 transition-colors"
+                >
+                    次へ →
+                </a>
+            ) : (
+                <span class="px-3 py-2 rounded-lg text-sm font-medium text-gray-400 dark:text-gray-600 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 cursor-not-allowed">
+                    次へ →
+                </span>
+            )}
+        </nav>
+    )
+}

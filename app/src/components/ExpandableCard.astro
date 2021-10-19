@@ -1,0 +1,89 @@
+---
+export interface Props {
+    containerClass?: string;
+    triggerClass?: string;
+    panelClass?: string;
+    defaultOpen?: boolean;
+}
+
+const {
+    containerClass = "",
+    triggerClass = "",
+    panelClass = "",
+    defaultOpen = false,
+} = Astro.props as Props;
+---
+
+<div
+    class={`w-full ${containerClass}`}
+    data-expandable
+    data-default-open={defaultOpen ? "1" : "0"}
+>
+    <div
+        class={`cursor-pointer ${triggerClass}`}
+        role="button"
+        tabindex="0"
+        aria-expanded={defaultOpen ? "true" : "false"}
+    >
+        <slot name="trigger" />
+    </div>
+
+    <div
+        class={`mt-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm ${panelClass}`}
+        data-expandable-panel
+        {...defaultOpen ? {} : { hidden: true }}
+    >
+        <div class="p-4 text-sm text-gray-700 dark:text-gray-200">
+            <slot />
+        </div>
+    </div>
+</div>
+
+<script>
+    document
+        .querySelectorAll<HTMLElement>("[data-expandable]")
+        .forEach((root) => {
+            const trigger = root.querySelector<HTMLElement>('[role="button"]');
+            const panel = root.querySelector<HTMLElement>(
+                "[data-expandable-panel]",
+            );
+            if (!trigger || !panel) return;
+
+            let open = root.dataset.defaultOpen === "1";
+
+            const setOpen = (v: boolean) => {
+                open = !!v;
+                trigger.setAttribute("aria-expanded", open ? "true" : "false");
+                panel.hidden = !open;
+                root.dispatchEvent(
+                    new CustomEvent("expandable:toggle", {
+                        bubbles: true,
+                        detail: { open },
+                    }),
+                );
+            };
+
+            const onActivate = (e: Event) => {
+                e.preventDefault();
+                // もし内部にリンクがあれば、展開操作を優先して遷移は抑制
+                const t = e.target as HTMLElement;
+                if (t && typeof t.closest === "function") {
+                    const a = t.closest("a");
+                    if (a) e.preventDefault();
+                }
+                setOpen(!open);
+            };
+
+            trigger.addEventListener("click", onActivate);
+            trigger.addEventListener("keydown", (e: KeyboardEvent) => {
+                if (e.key === "Enter" || e.key === " ") onActivate(e);
+            });
+
+            // 外部から状態を設定できるカスタムイベント
+            root.addEventListener("expandable:set", (e: Event) => {
+                const evt = e as CustomEvent;
+                const v = evt && evt.detail ? evt.detail.open : undefined;
+                if (typeof v === "boolean") setOpen(v);
+            });
+        });
+</script>

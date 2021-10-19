@@ -1,0 +1,151 @@
+---
+import type { CollectionEntry } from "astro:content";
+import BlogPostCard from "./BlogPostCard.astro";
+import Pagination from "./Pagination.astro";
+
+export interface Props {
+    /** 表示する記事（ページネーション済み） */
+    posts: CollectionEntry<"blog">[];
+    /** 全タグ一覧 */
+    allTags: string[];
+    /** 現在選択中のタグ（null ですべて） */
+    activeTag?: string | null;
+    /** サブタイトル */
+    subtitle?: string;
+    /** ページネーション情報 */
+    currentPage: number;
+    lastPage: number;
+    baseUrl: string;
+}
+
+const {
+    posts,
+    allTags,
+    activeTag = null,
+    subtitle = "技術記事やメモを公開しています．",
+    currentPage,
+    lastPage,
+    baseUrl,
+} = Astro.props;
+---
+
+<section class="py-16 px-4 bg-white dark:bg-gray-900 min-h-screen">
+    <div class="max-w-4xl mx-auto">
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold mb-3 text-gray-800 dark:text-white">
+                Blog
+            </h1>
+            <p class="text-gray-600 dark:text-gray-400">
+                {subtitle}
+            </p>
+        </div>
+
+        <!-- タグフィルタ + ソート -->
+        <div
+            class="flex flex-wrap items-center gap-4 mb-8 pb-6 border-b border-gray-200 dark:border-gray-700"
+        >
+            <div class="flex flex-wrap gap-2 flex-1">
+                <a
+                    href="/blog/"
+                    class:list={[
+                        "px-3 py-1.5 rounded-full text-xs font-medium transition-colors border",
+                        !activeTag
+                            ? "border-primary-600 bg-primary-600 text-white"
+                            : "border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400",
+                    ]}
+                >
+                    すべて
+                </a>
+                {
+                    allTags.map((tag: string) => (
+                        <a
+                            href={`/blog/tag/${encodeURIComponent(tag)}/`}
+                            class:list={[
+                                "px-3 py-1.5 rounded-full text-xs font-medium transition-colors border",
+                                tag === activeTag
+                                    ? "border-primary-600 bg-primary-600 text-white"
+                                    : "border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400",
+                            ]}
+                        >
+                            {tag}
+                        </a>
+                    ))
+                }
+            </div>
+
+            <div class="flex items-center gap-2">
+                <span class="text-xs text-gray-500 dark:text-gray-400">
+                    並び替え:
+                </span>
+                <button
+                    id="sort-toggle"
+                    class="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                    data-order="desc"
+                >
+                    新しい順 ↓
+                </button>
+            </div>
+        </div>
+
+        <!-- 記事一覧 -->
+        {
+            posts.length === 0 ? (
+                <p class="text-gray-500 dark:text-gray-400">
+                    該当する記事がありません．
+                </p>
+            ) : (
+                <div id="post-list" class="flex flex-col gap-6">
+                    {posts.map((post) => (
+                        <div data-date={post.data.date.valueOf()}>
+                            <BlogPostCard
+                                title={post.data.title}
+                                abstract={post.data.abstract}
+                                date={post.data.date.toLocaleDateString(
+                                    "ja-JP",
+                                    {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                    },
+                                )}
+                                href={`/blog/${post.id}`}
+                                ogp={post.data.ogp}
+                                tags={post.data.tags}
+                            />
+                        </div>
+                    ))}
+                </div>
+            )
+        }
+
+        <!-- ページネーション -->
+        <Pagination
+            currentPage={currentPage}
+            lastPage={lastPage}
+            baseUrl={baseUrl}
+        />
+    </div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const btn = document.getElementById("sort-toggle");
+        const list = document.getElementById("post-list");
+        if (!btn || !list) return;
+
+        btn.addEventListener("click", () => {
+            const order = btn.getAttribute("data-order");
+            const items = [...list.children] as HTMLElement[];
+            items.reverse();
+            items.forEach((item) => list.appendChild(item));
+
+            if (order === "desc") {
+                btn.setAttribute("data-order", "asc");
+                btn.textContent = "古い順 ↑";
+            } else {
+                btn.setAttribute("data-order", "desc");
+                btn.textContent = "新しい順 ↓";
+            }
+        });
+    });
+</script>

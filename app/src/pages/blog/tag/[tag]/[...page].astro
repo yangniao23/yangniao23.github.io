@@ -1,0 +1,45 @@
+---
+import Layout from "../../../../layouts/Layout.astro";
+import Header from "../../../../components/Header.astro";
+import ThemeToggle from "../../../../components/ThemeToggle.astro";
+import BlogListSection from "../../../../components/BlogListSection.astro";
+import { getCollection } from "astro:content";
+import { POSTS_PER_PAGE } from "../../../../consts";
+import type { GetStaticPathsOptions } from "astro";
+
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+    const allPosts = (await getCollection("blog"))
+        .filter((post) => !post.data.draft)
+        .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+    const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags ?? []))];
+
+    return allTags.flatMap((tag) => {
+        const filtered = allPosts.filter((p) => p.data.tags?.includes(tag));
+        return paginate(filtered, {
+            params: { tag },
+            pageSize: POSTS_PER_PAGE,
+            props: { tag, allTags },
+        });
+    });
+}
+
+const { page, tag, allTags } = Astro.props;
+---
+
+<Layout title={`${tag} | ブログ | ヤンのページ`}>
+    <Header />
+    <ThemeToggle />
+
+    <main>
+        <BlogListSection
+            posts={page.data}
+            allTags={allTags}
+            activeTag={tag}
+            subtitle={`「${tag}」タグの記事を表示しています．`}
+            currentPage={page.currentPage}
+            lastPage={page.lastPage}
+            baseUrl={`/blog/tag/${encodeURIComponent(tag)}/`}
+        />
+    </main>
+</Layout>

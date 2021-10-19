@@ -1,0 +1,43 @@
+---
+import Card from "./Card.astro";
+
+export interface Props {
+    username: string;
+}
+
+const { username } = Astro.props;
+---
+
+<div
+    data-discord-copy-card={username}
+    class="cursor-pointer select-none"
+    title={`"${username}" をコピー`}
+    role="button"
+    tabindex="0"
+    aria-label={`Discord ID "${username}" をクリップボードにコピー`}
+>
+    <Card icon="🎮" title="Discord" description={username} />
+</div>
+
+<script>
+    document
+        .querySelectorAll<HTMLElement>("[data-discord-copy-card]")
+        .forEach((el) => {
+            const copy = async () => {
+                const username = el.dataset.discordCopyCard!;
+                await navigator.clipboard.writeText(username);
+                const desc = el.querySelector("p");
+                if (!desc) return;
+                const orig = desc.textContent!;
+                desc.textContent = "コピーしました！";
+                setTimeout(() => (desc.textContent = orig), 2000);
+            };
+            el.addEventListener("click", copy);
+            el.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    copy();
+                }
+            });
+        });
+</script>

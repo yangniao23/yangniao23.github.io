@@ -1,0 +1,93 @@
+---
+const navItems = [
+    { name: "Top", href: "/" },
+    { name: "About", href: "/#about" },
+    { name: "Career", href: "/#career" },
+    { name: "Projects", href: "/#projects" },
+    { name: "Blog", href: "/blog" },
+    { name: "Contact", href: "/#contact" },
+];
+---
+
+<header
+    class="bg-white dark:bg-gray-800 shadow-md border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40"
+>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex-shrink-0">
+                <a
+                    href="/"
+                    class="text-xl font-bold text-primary-600 dark:text-primary-400"
+                >
+                    ヤンのページ
+                </a>
+            </div>
+
+            <!-- デスクトップナビゲーション -->
+            <nav class="hidden md:flex space-x-8">
+                {
+                    navItems.map((item) => (
+                        <a
+                            href={item.href}
+                            class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                        >
+                            {item.name}
+                        </a>
+                    ))
+                }
+            </nav>
+
+            <!-- モバイルメニューボタン -->
+            <div class="md:hidden">
+                <button
+                    id="mobile-menu-button"
+                    class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 focus:outline-none focus:text-primary-600"
+                >
+                    <svg
+                        class="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- モバイルメニュー -->
+    <div
+        id="mobile-menu"
+        class="md:hidden hidden bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700"
+    >
+        <div class="px-2 pt-2 pb-3 space-y-1">
+            {
+                navItems.map((item) => (
+                    <a
+                        href={item.href}
+                        class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
+                    >
+                        {item.name}
+                    </a>
+                ))
+            }
+        </div>
+    </div>
+</header>
+
+<script>
+    // モバイルメニューの切り替え
+    document.addEventListener("DOMContentLoaded", () => {
+        const button = document.getElementById("mobile-menu-button");
+        const menu = document.getElementById("mobile-menu");
+
+        button?.addEventListener("click", () => {
+            menu?.classList.toggle("hidden");
+        });
+    });
+</script>

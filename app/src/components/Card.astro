@@ -1,0 +1,30 @@
+---
+export interface Props {
+    icon?: string;
+    title: string;
+    description: string;
+    href?: string;
+    target?: string;
+}
+
+const { icon, title, description, href, target } = Astro.props;
+const isLink = !!href;
+const Tag = isLink ? "a" : "div";
+---
+
+<Tag
+    class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-center block hover:-translate-y-2 border border-gray-100 dark:border-gray-700"
+    href={href}
+    target={target}
+>
+    <div class="text-5xl mb-4 flex justify-center">
+        <slot name="icon"> {icon} </slot>
+    </div>
+
+    <h3 class="text-xl font-semibold mb-2 text-gray-800 dark:text-white">
+        {title}
+    </h3>
+    <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
+        {description}
+    </p>
+</Tag>

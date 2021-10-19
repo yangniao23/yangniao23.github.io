@@ -1,0 +1,90 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import ThemeToggle from "../../components/ThemeToggle.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+    const posts = await getCollection("blog");
+    return posts.map((post) => ({
+        params: { slug: post.id },
+        props: { post },
+    }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<Layout title={`${post.data.title} | ブログ`}>
+    <Header />
+    <ThemeToggle />
+
+    <main>
+        <article class="py-16 px-4 bg-white dark:bg-gray-900">
+            <div class="max-w-3xl mx-auto">
+                <!-- 記事ヘッダー -->
+                <div class="mb-12">
+                    <a
+                        href="/blog"
+                        class="text-primary-600 dark:text-primary-400 hover:underline text-sm mb-4 inline-block"
+                    >
+                        ← ブログ一覧に戻る
+                    </a>
+                    <h1
+                        class="text-3xl md:text-4xl font-bold mb-4 text-gray-800 dark:text-white"
+                    >
+                        {post.data.title}
+                    </h1>
+                    <div
+                        class="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400"
+                    >
+                        <time datetime={post.data.date.toISOString()}>
+                            {
+                                post.data.date.toLocaleDateString("ja-JP", {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                })
+                            }
+                        </time>
+                        {
+                            post.data.tags && post.data.tags.length > 0 && (
+                                <div class="flex gap-2">
+                                    {post.data.tags.map((tag: string) => (
+                                        <span class="bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 px-2 py-0.5 rounded text-xs">
+                                            {tag}
+                                        </span>
+                                    ))}
+                                </div>
+                            )
+                        }
+                    </div>
+                </div>
+
+                <!-- 記事本文 -->
+                <div
+                    class="prose prose-lg dark:prose-invert max-w-none
+                        prose-headings:text-gray-800 dark:prose-headings:text-white
+                        prose-a:text-primary-600 dark:prose-a:text-primary-400
+                        prose-code:text-primary-700 dark:prose-code:text-primary-300
+                        prose-pre:bg-gray-800 dark:prose-pre:bg-gray-950"
+                >
+                    <Content />
+                </div>
+
+                <!-- 記事フッター -->
+                <div
+                    class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700"
+                >
+                    <a
+                        href="/blog"
+                        class="text-primary-600 dark:text-primary-400 hover:underline"
+                    >
+                        ← ブログ一覧に戻る
+                    </a>
+                </div>
+            </div>
+        </article>
+    </main>
+</Layout>

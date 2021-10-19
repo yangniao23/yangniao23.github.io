@@ -1,0 +1,17 @@
+# dependencies (root level only)
+/node_modules/
+
+# yarn.lock (root level only — app/yarn.lock is tracked)
+/yarn.lock
+
+# OS
+.DS_Store
+Thumbs.db
+
+# editor
+.idea/
+*.swp
+*.swo
+
+# logs
+*.log
