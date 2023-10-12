@@ -57,6 +57,9 @@ const securityHeaders = [
 /**
  * @type {import('next/dist/next-server/server/config').NextConfig}
  **/
+
+const nextConfig = {
+}
 module.exports = () => {
   const plugins = [withContentlayer, withBundleAnalyzer]
   return plugins.reduce((acc, next) => next(acc), {
@@ -68,6 +71,8 @@ module.exports = () => {
     images: {
       domains: ['picsum.photos'],
     },
+    output: 'export',
+/*
     async headers() {
       return [
         {
@@ -75,7 +80,7 @@ module.exports = () => {
           headers: securityHeaders,
         },
       ]
-    },
+    },*/
     webpack: (config, options) => {
       config.module.rules.push({
         test: /\.svg$/,
@@ -86,3 +91,5 @@ module.exports = () => {
     },
   })
 }
+
+

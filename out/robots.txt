@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /
+
+Host: https://yangniao23.github.io
+Sitemap: https://yangniao23.github.io/sitemap.xml
