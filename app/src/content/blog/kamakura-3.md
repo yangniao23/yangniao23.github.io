@@ -2,7 +2,7 @@
 title: "KAMAKURA meetup vol.3 に参加してきた"
 description: "このブログの最初の記事です。"
 abstract: "KAMAKURA meetup vol.3 に参加してきた記録です．LT では破損した7zファイルを復元してみた話をしました．"
-date: 2026-02-26
+date: 2026-03-16
 tags: ["ブログ", "Astro"]
 ogp: "https://media.connpass.com/thumbs/82/c1/82c12930589ac29b3d773d5cb75e46af.png"
 ---
