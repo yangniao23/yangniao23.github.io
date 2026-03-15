@@ -5,6 +5,9 @@
 		"dockerfile": "Dockerfile"
 	},
 	"remoteUser": "node",
+	"remoteEnv": {
+		"SSH_AUTH_SOCK": "/ssh-agent"
+	},
 	"forwardPorts": [4321, 9229],
 	"postCreateCommand": "cd app && yarn install",
 	"postStartCommand": "cd app && yarn dev --host 0.0.0.0",
@@ -14,7 +17,12 @@
 	},
 	"customizations": {
 		"vscode": {
-			"extensions": ["astro-build.astro-vscode"]
+			"extensions": ["astro-build.astro-vscode"],
+			"settings": {
+				"remote.extensionKind": {
+					"vscode.git": ["ui"]
+				}
+			}
 		}
 	}
 
