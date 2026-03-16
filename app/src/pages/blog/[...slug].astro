@@ -16,7 +16,12 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 ---
 
-<Layout title={`${post.data.title} | ブログ`}>
+<Layout
+    title={`${post.data.title} | ブログ`}
+    description={post.data.abstract || undefined}
+    ogImage={post.data.ogp}
+    type="article"
+>
     <Header />
     <ThemeToggle />
 
